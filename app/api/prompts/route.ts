@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { prompts } from "../../lib/data";
+import { getPrompts, addPrompt } from "../../lib/data";
 
 export async function GET() {
-  return NextResponse.json(prompts);
+  return NextResponse.json(getPrompts());
 }
 
 export async function POST(request: Request) {
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       createdAt: new Date().toISOString(),
     } as const;
 
-    prompts.unshift(newPrompt as any);
+    addPrompt(newPrompt as any);
 
     return NextResponse.json(newPrompt, { status: 201 });
   } catch (err) {

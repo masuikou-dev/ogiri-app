@@ -20,7 +20,7 @@ export default function PromptList({ prompts }: { prompts: Prompt[] }) {
             <div>
               <div className="text-sm text-gray-500">{p.theme} — {new Date(p.createdAt).toLocaleString()}</div>
               <div className="mt-1 font-medium">
-                <a href={`/prompts/${p.id}`} className="text-blue-600 hover:underline">{p.text}</a>
+                <a href={`/prompts/${p.id}`} className="text-blue-600 hover:underline text-lg font-semibold">{p.text}</a>
               </div>
             </div>
             <div>

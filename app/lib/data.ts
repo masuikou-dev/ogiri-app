@@ -1,3 +1,6 @@
+import fs from "fs";
+import path from "path";
+
 export type Prompt = {
   id: string;
   text: string;
@@ -11,15 +14,56 @@ export type Answer = {
   text: string;
   createdAt: string;
   likeCount?: number;
+  likedBy?: string[]; // user ids who liked this answer
 };
 
-export const prompts: Prompt[] = [
-  {
-    id: "1",
-    text: "こんな校長先生は嫌だ。どんな人？",
-    theme: "学校",
-    createdAt: new Date().toISOString(),
-  },
-];
+const dataFile = path.resolve(process.cwd(), "data.json");
 
-export const answers: Answer[] = [];
+interface DataSchema {
+  prompts: Prompt[];
+  answers: Answer[];
+}
+
+function loadData(): DataSchema {
+  try {
+    const txt = fs.readFileSync(dataFile, "utf-8");
+    return JSON.parse(txt) as DataSchema;
+  } catch (e) {
+    // file not exist or parse error
+    return { prompts: [], answers: [] };
+  }
+}
+
+function saveData(data: DataSchema) {
+  fs.writeFileSync(dataFile, JSON.stringify(data, null, 2), "utf-8");
+}
+
+export function getPrompts(): Prompt[] {
+  return loadData().prompts;
+}
+
+export function addPrompt(p: Prompt) {
+  const d = loadData();
+  d.prompts.unshift(p);
+  saveData(d);
+}
+
+export function getAnswers(): Answer[] {
+  return loadData().answers;
+}
+
+export function addAnswer(a: Answer) {
+  const d = loadData();
+  d.answers.unshift(a);
+  saveData(d);
+}
+
+export function updateAnswer(updated: Answer) {
+  const d = loadData();
+  const idx = d.answers.findIndex((x) => x.id === updated.id);
+  if (idx !== -1) {
+    d.answers[idx] = updated;
+    saveData(d);
+  }
+}
+

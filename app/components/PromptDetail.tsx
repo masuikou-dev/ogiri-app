@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+
 type Answer = { id: string; promptId: string; text: string; createdAt: string; likeCount?: number };
 
 export default function PromptDetail({ promptId }: { promptId: string }) {
@@ -15,7 +16,9 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
       setLoading(true);
       try {
         const res = await fetch(`/api/prompts/${promptId}/answers`);
-        const data = await res.json();
+        const data: Answer[] = await res.json();
+        // sort once by likes descending
+        data.sort((a, b) => (b.likeCount ?? 0) - (a.likeCount ?? 0));
         setAnswers(data);
       } catch (e) {
         console.error(e);
@@ -77,40 +80,42 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
           <div className="text-gray-500">まだ回答がありません。</div>
         ) : (
           <div className="space-y-2">
-            {answers.map((a) => (
-              <div key={a.id} className="p-2 bg-gray-50 rounded-md">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="text-sm text-gray-500">{new Date(a.createdAt).toLocaleString()}</div>
-                    <div className="mt-1">{a.text}</div>
-                  </div>
-                  <div className="ml-3 text-right">
-                    <div className="text-sm text-gray-500">いいね {a.likeCount ?? 0}</div>
-                    <button
-                      onClick={async () => {
-                        try {
-                          console.log("Liking answer:", a.id);
-                          const res = await fetch(`/api/answers/${a.id}/like`, { method: "POST" });
-                          console.log("Response status:", res.status);
-                          if (res.ok) {
-                            const updated = await res.json();
-                            setAnswers((s) => s.map((x) => (x.id === updated.id ? updated : x)));
-                          } else {
-                            const errorText = await res.text();
-                            console.error("Error response:", res.status, errorText);
+            {answers
+              .map((a) => (
+                <div key={a.id} className="p-2 bg-gray-50 rounded-md">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="text-sm text-gray-500">{new Date(a.createdAt).toLocaleString()}</div>
+                      <div className="mt-1">{a.text}</div>
+                    </div>
+                    <div className="ml-3 text-right">
+                      <div className="text-sm text-gray-500">いいね {a.likeCount ?? 0}</div>
+                      <button
+                        onClick={async () => {
+                          try {
+                            const res = await fetch(`/api/answers/${a.id}/like`, {
+                              method: "POST",
+                            });
+                            if (res.ok) {
+                              const updated = await res.json();
+                              setAnswers((s) => s.map((x) => (x.id === updated.id ? updated : x)));
+                            } else {
+                              const errorText = await res.text();
+                              console.error("Error response:", res.status, errorText);
+                              alert(errorText);
+                            }
+                          } catch (e) {
+                            console.error(e);
                           }
-                        } catch (e) {
-                          console.error("Fetch error:", e);
-                        }
-                      }}
-                      className="mt-2 bg-red-500 text-white px-2 py-1 rounded-md text-sm"
-                    >
-                      いいね！
-                    </button>
+                        }}
+                        className="mt-2 bg-red-500 text-white px-2 py-1 rounded-md text-sm"
+                      >
+                        いいね！
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         )}
       </div>

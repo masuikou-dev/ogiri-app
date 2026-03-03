@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { answers } from "../../../../lib/data";
+import { getAnswers, addAnswer } from "../../../../lib/data";
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const list = answers.filter((a) => a.promptId === id);
+  const list = getAnswers().filter((a) => a.promptId === id);
   return NextResponse.json(list);
 }
 
@@ -24,9 +24,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       likeCount: 0,
     };
 
-    console.log("Adding answer:", newAnswer);
-    answers.unshift(newAnswer as any);
-    console.log("Total answers now:", answers.length, "ids:", answers.map((a) => a.id));
+    addAnswer(newAnswer as any);
 
     return NextResponse.json(newAnswer, { status: 201 });
   } catch (e) {

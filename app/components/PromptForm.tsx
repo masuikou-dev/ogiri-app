@@ -11,6 +11,14 @@ export default function PromptForm({ onAdd }: Props) {
   const [theme, setTheme] = useState("学校");
   const [loading, setLoading] = useState(false);
 
+  const randomize = () => {
+    import("../lib/randomPrompt").then((mod) => {
+      const r = mod.generatePrompt();
+      setText(r.text);
+      setTheme(r.theme);
+    });
+  };
+
   const submit = async () => {
     if (!text.trim()) return;
     setLoading(true);
@@ -43,13 +51,22 @@ export default function PromptForm({ onAdd }: Props) {
         onChange={(e) => setTheme(e.target.value)}
       />
 
-      <textarea
-        className="w-full border rounded-md p-2 mb-3"
-        rows={3}
-        placeholder="ここにお題を入力してください..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
+      <div className="flex gap-2 mb-3">
+        <textarea
+          className="flex-1 border rounded-md p-2"
+          rows={3}
+          placeholder="ここにお題を入力してください..."
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+        <button
+          type="button"
+          onClick={randomize}
+          className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600"
+        >
+          ランダム
+        </button>
+      </div>
 
       <button
         onClick={submit}
