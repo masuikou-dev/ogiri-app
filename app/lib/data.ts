@@ -6,6 +6,7 @@ export type Prompt = {
   text: string;
   theme?: string;
   createdAt: string;
+  likeCount?: number;
 };
 
 export type Answer = {
@@ -63,6 +64,15 @@ export function updateAnswer(updated: Answer) {
   const idx = d.answers.findIndex((x) => x.id === updated.id);
   if (idx !== -1) {
     d.answers[idx] = updated;
+    saveData(d);
+  }
+}
+
+export function updatePrompt(updated: Prompt) {
+  const d = loadData();
+  const idx = d.prompts.findIndex((x) => x.id === updated.id);
+  if (idx !== -1) {
+    d.prompts[idx] = updated;
     saveData(d);
   }
 }

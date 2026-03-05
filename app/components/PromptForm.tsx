@@ -8,6 +8,7 @@ type Props = {
 
 export default function PromptForm({ onAdd }: Props) {
   const [text, setText] = useState("");
+  const [answer, setAnswer] = useState(""); // optional answer field
   const [theme, setTheme] = useState("学校");
   const [loading, setLoading] = useState(false);
 
@@ -20,18 +21,20 @@ export default function PromptForm({ onAdd }: Props) {
   };
 
   const submit = async () => {
+    // prompt required, answer optional
     if (!text.trim()) return;
     setLoading(true);
     try {
       const res = await fetch("/api/prompts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: text.trim(), theme }),
+        body: JSON.stringify({ text: text.trim(), theme, answer: answer.trim() }),
       });
       if (res.ok) {
         const data = await res.json();
         onAdd(data);
         setText("");
+        setAnswer("");
       } else {
         console.error("failed to post", await res.text());
       }
@@ -68,9 +71,19 @@ export default function PromptForm({ onAdd }: Props) {
         </button>
       </div>
 
+      <div className="mb-3">
+        <textarea
+          className="w-full border rounded-md p-2"
+          rows={2}
+          placeholder="ここに回答を入力してください...（省略可）"
+          value={answer}
+          onChange={(e) => setAnswer(e.target.value)}
+        />
+      </div>
+
       <button
         onClick={submit}
-        disabled={loading}
+        disabled={loading || !text.trim()}
         className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 disabled:opacity-60"
       >
         {loading ? "送信中..." : "投稿する"}
