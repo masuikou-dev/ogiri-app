@@ -7,7 +7,6 @@ export default function BottomNav() {
 
   const items = [
     { label: "ホーム", href: "/" },
-    { label: "検索", href: "/search" },
     { label: "マイページ", href: "/mypage" },
   ];
 

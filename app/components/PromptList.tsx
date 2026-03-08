@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-type Prompt = { id: string; text: string; theme?: string; createdAt: string; likeCount?: number };
+type Prompt = { id: string; text: string; createdAt: string; likeCount?: number };
 
 export default function PromptList({ prompts }: { prompts: Prompt[] }) {
   const [likes, setLikes] = useState<Record<string, number>>({});
@@ -13,17 +13,22 @@ export default function PromptList({ prompts }: { prompts: Prompt[] }) {
   }
 
   const handleLike = async (promptId: string) => {
+    console.log("Liking prompt:", promptId);
     setIsLoading((prev) => ({ ...prev, [promptId]: true }));
     try {
       const res = await fetch(`/api/prompts/${promptId}/like`, {
         method: "POST",
       });
+      console.log("Like response:", res.status);
       if (res.ok) {
         const updated = await res.json();
+        console.log("Updated prompt:", updated);
         setLikes((prev) => ({ ...prev, [promptId]: updated.likeCount }));
+      } else {
+        console.error("Failed to like:", await res.text());
       }
     } catch (e) {
-      console.error(e);
+      console.error("Like error:", e);
     } finally {
       setIsLoading((prev) => ({ ...prev, [promptId]: false }));
     }
@@ -35,7 +40,7 @@ export default function PromptList({ prompts }: { prompts: Prompt[] }) {
         <div key={p.id} className="border rounded-md p-3 bg-white">
           <div className="flex justify-between items-start">
             <div className="flex-1">
-              <div className="text-sm text-gray-500">{p.theme} — {new Date(p.createdAt).toLocaleString()}</div>
+              <div className="text-sm text-gray-500">{new Date(p.createdAt).toLocaleString()}</div>
               <a
                 href={`/prompts/${p.id}`}
                 className="mt-1 text-lg font-semibold text-blue-600 hover:underline block"
@@ -47,9 +52,9 @@ export default function PromptList({ prompts }: { prompts: Prompt[] }) {
               <button
                 onClick={() => handleLike(p.id)}
                 disabled={isLoading[p.id]}
-                className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 disabled:opacity-60"
+                className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 disabled:opacity-60 text-sm font-medium"
               >
-                ❤️ {likes[p.id] !== undefined ? likes[p.id] : p.likeCount || 0}
+                ♡ {likes[p.id] !== undefined ? likes[p.id] : p.likeCount || 0}
               </button>
             </div>
           </div>

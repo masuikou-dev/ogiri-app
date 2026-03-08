@@ -10,6 +10,7 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [sortBy, setSortBy] = useState<"newest" | "likes">("likes");
 
   useEffect(() => {
     (async () => {
@@ -17,8 +18,6 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
       try {
         const res = await fetch(`/api/prompts/${promptId}/answers`);
         const data: Answer[] = await res.json();
-        // sort once by likes descending
-        data.sort((a, b) => (b.likeCount ?? 0) - (a.likeCount ?? 0));
         setAnswers(data);
       } catch (e) {
         console.error(e);
@@ -73,7 +72,23 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
       </div>
 
       <div className="mt-4">
-        <div className="text-sm text-gray-600 mb-2">回答一覧</div>
+        <div className="flex justify-between items-center mb-2">
+          <div className="text-sm text-gray-600">回答一覧</div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setSortBy("newest")}
+              className={`px-2 py-1 rounded-md text-xs ${sortBy === "newest" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
+            >
+              新着順
+            </button>
+            <button
+              onClick={() => setSortBy("likes")}
+              className={`px-2 py-1 rounded-md text-xs ${sortBy === "likes" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
+            >
+              いいね順
+            </button>
+          </div>
+        </div>
         {loading ? (
           <div className="text-gray-500">読み込み中...</div>
         ) : answers.length === 0 ? (
@@ -81,6 +96,13 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
         ) : (
           <div className="space-y-2">
             {answers
+              .sort((a, b) => {
+                if (sortBy === "likes") {
+                  return (b.likeCount ?? 0) - (a.likeCount ?? 0);
+                } else {
+                  return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+                }
+              })
               .map((a) => (
                 <div key={a.id} className="p-2 bg-gray-50 rounded-md">
                   <div className="flex justify-between items-start">
@@ -89,15 +111,17 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
                       <div className="mt-1">{a.text}</div>
                     </div>
                     <div className="ml-3 text-right">
-                      <div className="text-sm text-gray-500">いいね {a.likeCount ?? 0}</div>
                       <button
                         onClick={async () => {
+                          console.log("Liking answer:", a.id);
                           try {
                             const res = await fetch(`/api/answers/${a.id}/like`, {
                               method: "POST",
                             });
+                            console.log("Answer like response:", res.status);
                             if (res.ok) {
                               const updated = await res.json();
+                              console.log("Updated answer:", updated);
                               setAnswers((s) => s.map((x) => (x.id === updated.id ? updated : x)));
                             } else {
                               const errorText = await res.text();
@@ -108,9 +132,10 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
                             console.error(e);
                           }
                         }}
-                        className="mt-2 bg-red-500 text-white px-2 py-1 rounded-md text-sm"
+                        disabled={false}
+                        className="mt-2 bg-gray-500 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-600 disabled:opacity-60 font-medium"
                       >
-                        いいね！
+                        ♡ {a.likeCount ?? 0}
                       </button>
                     </div>
                   </div>

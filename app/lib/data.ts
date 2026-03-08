@@ -4,7 +4,6 @@ import path from "path";
 export type Prompt = {
   id: string;
   text: string;
-  theme?: string;
   createdAt: string;
   likeCount?: number;
 };

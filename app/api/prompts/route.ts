@@ -8,7 +8,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { text, theme, answer } = body as { text?: string; theme?: string; answer?: string };
+    const { text, answer } = body as { text?: string; answer?: string };
 
     if (!text || typeof text !== "string") {
       return NextResponse.json({ error: "text is required" }, { status: 400 });
@@ -21,7 +21,6 @@ export async function POST(request: Request) {
     const newPrompt = {
       id: String(Date.now()),
       text: text.trim(),
-      theme: theme ?? "一般",
       createdAt: new Date().toISOString(),
       likeCount: 0,
     } as const;

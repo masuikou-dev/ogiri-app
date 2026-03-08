@@ -3,20 +3,18 @@
 import { useState } from "react";
 
 type Props = {
-  onAdd: (p: { id: string; text: string; theme?: string; createdAt: string }) => void;
+  onAdd: (p: { id: string; text: string; createdAt: string }) => void;
 };
 
 export default function PromptForm({ onAdd }: Props) {
   const [text, setText] = useState("");
   const [answer, setAnswer] = useState(""); // optional answer field
-  const [theme, setTheme] = useState("学校");
   const [loading, setLoading] = useState(false);
 
   const randomize = () => {
     import("../lib/randomPrompt").then((mod) => {
       const r = mod.generatePrompt();
       setText(r.text);
-      setTheme(r.theme);
     });
   };
 
@@ -28,7 +26,7 @@ export default function PromptForm({ onAdd }: Props) {
       const res = await fetch("/api/prompts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: text.trim(), theme, answer: answer.trim() }),
+        body: JSON.stringify({ text: text.trim(), answer: answer.trim() }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -47,13 +45,6 @@ export default function PromptForm({ onAdd }: Props) {
 
   return (
     <div className="mb-6">
-      <div className="mb-2 text-sm text-gray-600">テーマ</div>
-      <input
-        className="w-full border rounded-md p-2 mb-3"
-        value={theme}
-        onChange={(e) => setTheme(e.target.value)}
-      />
-
       <div className="flex gap-2 mb-3">
         <textarea
           className="flex-1 border rounded-md p-2"
