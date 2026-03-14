@@ -11,13 +11,13 @@ export default function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white shadow-inner">
+    <nav className="fixed bottom-0 left-0 w-full bg-[#dcdcdc] border-t-2 border-[#808080]">
       <ul className="flex justify-around p-2">
         {items.map((it) => (
           <li key={it.href}>
             <a
               href={it.href}
-              className={`text-sm ${pathname === it.href ? "font-bold text-black" : "text-gray-600"}`}
+              className={`text-sm underline ${pathname === it.href ? "font-bold text-black" : "text-[#0000ee]"}`}
             >
               {it.label}
             </a>

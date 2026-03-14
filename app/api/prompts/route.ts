@@ -1,8 +1,18 @@
 import { NextResponse } from "next/server";
-import { getPrompts, addPrompt, addAnswer } from "../../lib/data";
+import { createTopic, getTopics } from "@/services/topics";
+import { createAnswer } from "@/services/answers";
 
 export async function GET() {
-  return NextResponse.json(getPrompts());
+  try {
+    const prompts = await getTopics();
+    return NextResponse.json(prompts);
+  } catch (error) {
+    console.error("supabase topics fetch failed", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "failed to fetch topics" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: Request) {
@@ -18,30 +28,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "answer must be a string" }, { status: 400 });
     }
 
-    const newPrompt = {
-      id: String(Date.now()),
-      text: text.trim(),
-      createdAt: new Date().toISOString(),
-      likeCount: 0,
-    } as const;
-
-    addPrompt(newPrompt as any);
+    const newPrompt = await createTopic(text);
 
     // if answer text provided, store it
     if (answer && answer.trim()) {
-      const newAnswer = {
-        id: String(Date.now()) + "-a",
-        promptId: newPrompt.id,
-        text: answer.trim(),
-        createdAt: new Date().toISOString(),
-        likeCount: 0,
-      } as const;
-      addAnswer(newAnswer as any);
+      await createAnswer(newPrompt.id, answer.trim());
     }
 
     // return prompt (client doesn't need answer object yet)
     return NextResponse.json(newPrompt, { status: 201 });
   } catch (err) {
-    return NextResponse.json({ error: "invalid json" }, { status: 400 });
+    const msg = err instanceof Error ? err.message : "invalid json";
+    return NextResponse.json({ error: msg }, { status: 400 });
   }
 }

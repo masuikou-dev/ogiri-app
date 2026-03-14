@@ -3,7 +3,7 @@
 // Word型: 単語のテキストと品詞を保持
 type Word = {
   text: string;
-  pos: "noun" | "verb";
+  pos: "noun" | "verb" | "adjective";
 };
 
 // word categories for slots - expanded and grammar-aware
@@ -33,7 +33,7 @@ export type Category =
 // Slot型: カテゴリと品詞制約を保持
 type Slot = {
   category: Category;
-  pos?: "noun" | "verb";
+  pos?: "noun" | "verb" | "adjective";
 };
 
 const wordPools: Record<Category, Word[]> = {
@@ -142,7 +142,7 @@ const wordPools: Record<Category, Word[]> = {
     { text: "ゾンビ", pos: "noun" },
     { text: "吸血鬼", pos: "noun" },
     { text: "狼男", pos: "noun" },
-    { text: "エイリエン", pos: "noun" },
+    { text: "エイリアン", pos: "noun" },
     { text: "UFO", pos: "noun" },
     { text: "神様", pos: "noun" },
     { text: "悪魔", pos: "noun" },
@@ -328,44 +328,44 @@ const wordPools: Record<Category, Word[]> = {
     { text: "永遠", pos: "noun" },
   ],
   adjective: [
-    { text: "嬉しい", pos: "noun" },
-    { text: "悲しい", pos: "noun" },
-    { text: "怒っている", pos: "noun" },
-    { text: "呆れている", pos: "noun" },
-    { text: "恥ずかしい", pos: "noun" },
-    { text: "不安な", pos: "noun" },
-    { text: "幸せな", pos: "noun" },
-    { text: "悔しい", pos: "noun" },
-    { text: "気持ち悪い", pos: "noun" },
-    { text: "素晴らしい", pos: "noun" },
-    { text: "最悪な", pos: "noun" },
-    { text: "ひどい", pos: "noun" },
-    { text: "良い", pos: "noun" },
-    { text: "悪い", pos: "noun" },
-    { text: "美しい", pos: "noun" },
-    { text: "醜い", pos: "noun" },
-    { text: "優雅な", pos: "noun" },
-    { text: "粗雑な", pos: "noun" },
-    { text: "上品な", pos: "noun" },
-    { text: "下品な", pos: "noun" },
-    { text: "清潔な", pos: "noun" },
-    { text: "汚い", pos: "noun" },
-    { text: "温かい", pos: "noun" },
-    { text: "冷たい", pos: "noun" },
-    { text: "熱い", pos: "noun" },
-    { text: "涼しい", pos: "noun" },
-    { text: "明るい", pos: "noun" },
-    { text: "暗い", pos: "noun" },
-    { text: "大きな", pos: "noun" },
-    { text: "小さな", pos: "noun" },
-    { text: "太った", pos: "noun" },
-    { text: "痩せた", pos: "noun" },
-    { text: "賢い", pos: "noun" },
-    { text: "阿呆な", pos: "noun" },
-    { text: "勇敢な", pos: "noun" },
-    { text: "臆病な", pos: "noun" },
-    { text: "親切な", pos: "noun" },
-    { text: "意地悪な", pos: "noun" },
+    { text: "嬉しい", pos: "adjective" },
+    { text: "悲しい", pos: "adjective" },
+    { text: "怒っている", pos: "adjective" },
+    { text: "呆れている", pos: "adjective" },
+    { text: "恥ずかしい", pos: "adjective" },
+    { text: "不安な", pos: "adjective" },
+    { text: "幸せな", pos: "adjective" },
+    { text: "悔しい", pos: "adjective" },
+    { text: "気持ち悪い", pos: "adjective" },
+    { text: "素晴らしい", pos: "adjective" },
+    { text: "最悪な", pos: "adjective" },
+    { text: "ひどい", pos: "adjective" },
+    { text: "良い", pos: "adjective" },
+    { text: "悪い", pos: "adjective" },
+    { text: "美しい", pos: "adjective" },
+    { text: "醜い", pos: "adjective" },
+    { text: "優雅な", pos: "adjective" },
+    { text: "粗雑な", pos: "adjective" },
+    { text: "上品な", pos: "adjective" },
+    { text: "下品な", pos: "adjective" },
+    { text: "清潔な", pos: "adjective" },
+    { text: "汚い", pos: "adjective" },
+    { text: "温かい", pos: "adjective" },
+    { text: "冷たい", pos: "adjective" },
+    { text: "熱い", pos: "adjective" },
+    { text: "涼しい", pos: "adjective" },
+    { text: "明るい", pos: "adjective" },
+    { text: "暗い", pos: "adjective" },
+    { text: "大きな", pos: "adjective" },
+    { text: "小さな", pos: "adjective" },
+    { text: "太った", pos: "adjective" },
+    { text: "痩せた", pos: "adjective" },
+    { text: "賢い", pos: "adjective" },
+    { text: "阿呆な", pos: "adjective" },
+    { text: "勇敢な", pos: "adjective" },
+    { text: "臆病な", pos: "adjective" },
+    { text: "親切な", pos: "adjective" },
+    { text: "意地悪な", pos: "adjective" },
   ],
   emotion: [
     { text: "喜び", pos: "noun" },
@@ -475,29 +475,29 @@ const wordPools: Record<Category, Word[]> = {
     { text: "感情的", pos: "noun" },
   ],
   abilityAction: [
-    { text: "透明人間になった", pos: "verb" },
-    { text: "瞬間移動した", pos: "verb" },
-    { text: "時間停止した", pos: "verb" },
-    { text: "飛行能力を得た", pos: "verb" },
-    { text: "怪力を持った", pos: "verb" },
-    { text: "火を出した", pos: "verb" },
-    { text: "氷を操った", pos: "verb" },
-    { text: "風を操った", pos: "verb" },
-    { text: "催眠をかけた", pos: "verb" },
-    { text: "テレパシーをした", pos: "verb" },
-    { text: "予知した", pos: "verb" },
-    { text: "姿を変えた", pos: "verb" },
-    { text: "物を分身させた", pos: "verb" },
-    { text: "時間逆行した", pos: "verb" },
-    { text: "パラレルワールド移動した", pos: "verb" },
+    { text: "透明人間になる", pos: "verb" },
+    { text: "瞬間移動する", pos: "verb" },
+    { text: "時間停止する", pos: "verb" },
+    { text: "飛行能力を得る", pos: "verb" },
+    { text: "怪力を持つ", pos: "verb" },
+    { text: "火を出す", pos: "verb" },
+    { text: "氷を操る", pos: "verb" },
+    { text: "風を操る", pos: "verb" },
+    { text: "催眠をかける", pos: "verb" },
+    { text: "テレパシーを使う", pos: "verb" },
+    { text: "予知する", pos: "verb" },
+    { text: "姿を変える", pos: "verb" },
+    { text: "物を分身させる", pos: "verb" },
+    { text: "時間逆行する", pos: "verb" },
+    { text: "パラレルワールドへ移動する", pos: "verb" },
   ],
   abilitySkill: [
     { text: "念力", pos: "noun" },
     { text: "催眠", pos: "noun" },
     { text: "テレパシー", pos: "noun" },
     { text: "予知能力", pos: "noun" },
-    { text: "姿を変える", pos: "noun" },
-    { text: "物を分身させる", pos: "noun" },
+    { text: "変身能力", pos: "noun" },
+    { text: "分身能力", pos: "noun" },
     { text: "時間逆行", pos: "noun" },
     { text: "パラレルワールド移動", pos: "noun" },
   ],
@@ -627,177 +627,177 @@ export interface Template {
 
 const templates: Template[] = [
   { text: "こんな{slotA}は嫌だ", slots: { slotA: { category: "person", pos: "noun" } } },
-  { text: "ダメな{slotA}の特徴", slots: { slotA: { category: "person", pos: "noun" } } },
-  { text: "絶対に{slotA}してはいけない{slotB}", slots: { slotA: { category: "concept", pos: "noun" }, slotB: { category: "object", pos: "noun" } } },
+  { text: "ダメな{slotA}の特徴とは", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "絶対に{slotA}してはいけない{slotB}とは", slots: { slotA: { category: "concept", pos: "noun" }, slotB: { category: "object", pos: "noun" } } },
   { text: "{slotA}に新機能が追加されました。それは？", slots: { slotA: { category: "object", pos: "noun" } }, allowedThemes: ["SF","学校","職場"] },
   { text: "{slotA}のキャッチコピーを考えてください", slots: { slotA: { category: "object", pos: "noun" } }, allowedThemes: ["旅行","料理","スポーツ"] },
-  { text: "実は{slotA}は{slotB}だった", slots: { slotA: { category: "animal", pos: "noun" }, slotB: { category: "creature", pos: "noun" } }, allowedThemes: ["ホラー","ファンタジー"] },
-  { text: "ダメな{slotA}の特徴", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "実は{slotA}は{slotB}だった理由", slots: { slotA: { category: "animal", pos: "noun" }, slotB: { category: "creature", pos: "noun" } }, allowedThemes: ["ホラー","ファンタジー"] },
+  { text: "ダメな{slotA}の特徴とは", slots: { slotA: { category: "person", pos: "noun" } } },
   { text: "こんな{slotA}は嫌だ", slots: { slotA: { category: "person", pos: "noun" } } },
-  { text: "{slotA}と{slotB}が逆になった世界", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "animal", pos: "noun" } }, allowedThemes: ["SF","ファンタジー"] },
+  { text: "{slotA}と{slotB}が逆になった結果", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "animal", pos: "noun" } }, allowedThemes: ["SF","ファンタジー"] },
   
-    { text: "こんな{slotA}はすぐクビ", slots: { slotA: { category: "occupation", pos: "noun" } } },
+    { text: "こんな{slotA}はすぐクビな理由とは", slots: { slotA: { category: "occupation", pos: "noun" } } },
 
-  { text: "こんな{slotA}は信用できない", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "こんな{slotA}は信用できない理由とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-  { text: "こんな{slotA}はモテない", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "こんな{slotA}はモテない理由とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-  { text: "{slotA}が炎上した理由", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "{slotA}が炎上した理由とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-  { text: "{slotA}の黒歴史", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "{slotA}の黒歴史とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-  { text: "{slotA}の裏バイト", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "{slotA}の裏バイトとは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-  { text: "{slotA}の弱点", slots: { slotA: { category: "creature", pos: "noun" } } },
+  { text: "{slotA}の弱点とは", slots: { slotA: { category: "creature", pos: "noun" } } },
 
-  { text: "{slotA}が絶対に言わない一言", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "{slotA}が絶対に言わない一言とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-  { text: "{slotA}がクビになった理由", slots: { slotA: { category: "occupation", pos: "noun" } } },
+  { text: "{slotA}がクビになった理由とは", slots: { slotA: { category: "occupation", pos: "noun" } } },
 
-  { text: "{slotA}の意味不明なルール", slots: { slotA: { category: "organization", pos: "noun" } } },
+  { text: "{slotA}の意味不明なルールとは", slots: { slotA: { category: "organization", pos: "noun" } } },
 
-  { text: "{slotA}の恥ずかしい秘密", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "{slotA}の恥ずかしい秘密とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-  { text: "{slotA}のやらかし", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "{slotA}のやらかしとは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-  { text: "{slotA}のレビュー★1の理由", slots: { slotA: { category: "product", pos: "noun" } } },
+  { text: "{slotA}のレビュー★1の理由とは", slots: { slotA: { category: "product", pos: "noun" } } },
 
-  { text: "{slotA}のクレーム内容", slots: { slotA: { category: "product", pos: "noun" } } },
+  { text: "{slotA}のクレーム内容とは", slots: { slotA: { category: "product", pos: "noun" } } },
 
-  { text: "{slotA}の間違った使い方", slots: { slotA: { category: "object", pos: "noun" } } },
+  { text: "{slotA}の間違った使い方とは", slots: { slotA: { category: "object", pos: "noun" } } },
 
-  { text: "{slotA}の新しい使い道", slots: { slotA: { category: "object", pos: "noun" } } },
+  { text: "{slotA}の新しい使い道とは", slots: { slotA: { category: "object", pos: "noun" } } },
 
-  { text: "{slotA}の説明書に書いてある注意書き", slots: { slotA: { category: "product", pos: "noun" } } },
+  { text: "{slotA}の説明書に書いてある注意書きとは", slots: { slotA: { category: "product", pos: "noun" } } },
 
-  { text: "{slotA}のキャッチコピー", slots: { slotA: { category: "product", pos: "noun" } } },
+  { text: "新しい{slotA}のキャッチコピーとは", slots: { slotA: { category: "product", pos: "noun" } } },
 
-  { text: "{slotA}の公式発表", slots: { slotA: { category: "organization", pos: "noun" } } },
+  { text: "{slotA}の公式発表とは", slots: { slotA: { category: "organization", pos: "noun" } } },
 
-  { text: "{slotA}の謝罪会見", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "{slotA}の謝罪会見とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-  { text: "{slotA}の不祥事", slots: { slotA: { category: "organization", pos: "noun" } } },
+  { text: "{slotA}の不祥事とは", slots: { slotA: { category: "organization", pos: "noun" } } },
 
-  { text: "{slotA}が{slotB}した結果", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "mistakeAction", pos: "verb" } } },
+  { text: "{slotA}が{slotB}した結果とは", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "mistakeAction", pos: "verb" } } },
 
-  { text: "{slotA}が{slotB}で炎上", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "mistakeEvent", pos: "noun" } } },
+  { text: "{slotA}が{slotB}で炎上の理由とは", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "mistakeEvent", pos: "noun" } } },
 
-  { text: "{slotA}が{slotB}して大混乱", slots: { slotA: { category: "animal", pos: "noun" }, slotB: { category: "abilityAction", pos: "verb" } } },
+  { text: "{slotA}が{slotB}能力を手に入れた結果とは", slots: { slotA: { category: "animal", pos: "noun" }, slotB: { category: "abilityAction", pos: "verb" } } },
 
-  { text: "{slotA}が{slotB}を覚えた", slots: { slotA: { category: "animal", pos: "noun" }, slotB: { category: "abilitySkill", pos: "noun" } } },
+  { text: "{slotA}が{slotB}を覚えた理由とは", slots: { slotA: { category: "animal", pos: "noun" }, slotB: { category: "abilitySkill", pos: "noun" } } },
 
-  { text: "{slotA}が{slotB}を始めた理由", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "abilityAction", pos: "verb" } } },
+  { text: "{slotA}が{slotB}能力の訓練を始めた理由とは", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "abilityAction", pos: "verb" } } },
 
-  { text: "{slotA}なのに{slotB}", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "trait", pos: "noun" } } },
+  { text: "{slotA}なのに{slotB}な理由とは", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "trait", pos: "noun" } } },
 
-  { text: "{slotA}なのに誰も驚かない理由", slots: { slotA: { category: "creature", pos: "noun" } } },
+  { text: "{slotA}なのに誰も驚かない理由とは", slots: { slotA: { category: "creature", pos: "noun" } } },
 
-  { text: "{slotA}なのに人気がない理由", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "{slotA}なのに人気がない理由とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-  { text: "{slotA}の間違った進化", slots: { slotA: { category: "animal", pos: "noun" } } },
+  { text: "{slotA}の間違った進化とは", slots: { slotA: { category: "animal", pos: "noun" } } },
 
-  { text: "{slotA}の意外な特技", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "{slotA}の意外な特技とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-  { text: "{slotA}の隠された能力", slots: { slotA: { category: "person", pos: "noun" } } },
+  { text: "{slotA}の隠された能力とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-  { text: "{slotA}が実は{slotB}だった", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "creature", pos: "noun" } } },
+  { text: "{slotA}が実は{slotB}だった理由とは", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "creature", pos: "noun" } } },
 
-  { text: "{slotA}と{slotB}が入れ替わった世界", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "animal", pos: "noun" } } },
+  { text: "{slotA}と{slotB}が入れ替わった世界とは", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "animal", pos: "noun" } } },
 
-  { text: "{slotA}が{slotB}を支配する世界", slots: { slotA: { category: "animal", pos: "noun" }, slotB: { category: "person", pos: "noun" } } },
+  { text: "{slotA}が{slotB}を支配する世界とは", slots: { slotA: { category: "animal", pos: "noun" }, slotB: { category: "person", pos: "noun" } } },
 
-  { text: "{slotA}が{slotB}に就職した理由", slots: { slotA: { category: "animal", pos: "noun" }, slotB: { category: "organization", pos: "noun" } } },
+  { text: "{slotA}が{slotB}に就職した結果", slots: { slotA: { category: "animal", pos: "noun" }, slotB: { category: "organization", pos: "noun" } } },
 
-  { text: "{slotA}が{slotB}を買収", slots: { slotA: { category: "organization", pos: "noun" }, slotB: { category: "organization", pos: "noun" } } },
+  { text: "{slotA}が{slotB}を買収した結果", slots: { slotA: { category: "organization", pos: "noun" }, slotB: { category: "organization", pos: "noun" } } },
 
-  { text: "{slotA}が{slotB}とコラボ", slots: { slotA: { category: "product", pos: "noun" }, slotB: { category: "product", pos: "noun" } } },
+  { text: "{slotA}が{slotB}とコラボした結果", slots: { slotA: { category: "product", pos: "noun" }, slotB: { category: "product", pos: "noun" } } },
 
-  { text: "{slotA}の新サービス", slots: { slotA: { category: "organization", pos: "noun" } } },
+  { text: "{slotA}の新サービスとは", slots: { slotA: { category: "organization", pos: "noun" } } },
 
-  { text: "{slotA}のヤバい新機能", slots: { slotA: { category: "technology", pos: "noun" } } },
+  { text: "{slotA}のヤバい新機能とは", slots: { slotA: { category: "technology", pos: "noun" } } },
 
-  { text: "{slotA}が世界を支配したら", slots: { slotA: { category: "technology", pos: "noun" } } },
+  { text: "{slotA}が世界を支配した結果", slots: { slotA: { category: "technology", pos: "noun" } } },
 
   { text: "{slotA}が暴走した結果", slots: { slotA: { category: "technology", pos: "noun" } } },
 
-  { text: "{slotA}が{slotB}した世界", slots: { slotA: { category: "technology", pos: "noun" }, slotB: { category: "abilityAction", pos: "verb" } } },
+  { text: "{slotA}が{slotB}能力を与えた結果", slots: { slotA: { category: "technology", pos: "noun" }, slotB: { category: "abilityAction", pos: "verb" } } },
 
-  { text: "{slotA}のバグ", slots: { slotA: { category: "technology", pos: "noun" } } },
+  { text: "{slotA}のバグとは", slots: { slotA: { category: "technology", pos: "noun" } } },
 
   { text: "{slotA}がバグった結果", slots: { slotA: { category: "technology", pos: "noun" } } },
 
-  { text: "{slotA}の意味不明な仕様", slots: { slotA: { category: "technology", pos: "noun" } } },
+  { text: "{slotA}の意味不明な仕様とは", slots: { slotA: { category: "technology", pos: "noun" } } },
 
-  { text: "{slotA}が{slotB}で大炎上", slots: { slotA: { category: "organization", pos: "noun" }, slotB: { category: "event", pos: "noun" } } },
+  { text: "{slotA}が{slotB}で大炎上した理由とは", slots: { slotA: { category: "organization", pos: "noun" }, slotB: { category: "event", pos: "noun" } } },
 
-  { text: "{slotA}の隠された真実", slots: { slotA: { category: "organization", pos: "noun" } } },
+  { text: "{slotA}の隠された真実とは", slots: { slotA: { category: "organization", pos: "noun" } } },
 
-  { text: "{slotA}の都市伝説", slots: { slotA: { category: "place", pos: "noun" } } },
+  { text: "{slotA}の都市伝説とは", slots: { slotA: { category: "place", pos: "noun" } } },
 
-  { text: "{slotA}で起きた事件", slots: { slotA: { category: "place", pos: "noun" } } },
+  { text: "{slotA}で起きた事件とは", slots: { slotA: { category: "place", pos: "noun" } } },
 
-  { text: "{slotA}で絶対やってはいけないこと", slots: { slotA: { category: "place", pos: "noun" } } },
+  { text: "{slotA}で絶対やってはいけないこととは", slots: { slotA: { category: "place", pos: "noun" } } },
 
-  { text: "{slotA}の裏ルール", slots: { slotA: { category: "place", pos: "noun" } } },
+  { text: "{slotA}の裏ルールとは", slots: { slotA: { category: "place", pos: "noun" } } },
 
-  { text: "{slotA}の危険な遊び方", slots: { slotA: { category: "object", pos: "noun" } } },
+  { text: "{slotA}の危険な遊び方とは", slots: { slotA: { category: "object", pos: "noun" } } },
 
-  { text: "{slotA}の危険な使い方", slots: { slotA: { category: "product", pos: "noun" } } },
-  { text: "{slotA}のレビュー★0の理由", slots: { slotA: { category: "product", pos: "noun" } } },
+  { text: "{slotA}の危険な使い方とは", slots: { slotA: { category: "product", pos: "noun" } } },
+  { text: "{slotA}のレビュー★0の理由とは", slots: { slotA: { category: "product", pos: "noun" } } },
 
-{ text: "{slotA}がやりがちなミス", slots: { slotA: { category: "person", pos: "noun" } } },
+{ text: "{slotA}がやりがちなミスとは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-{ text: "{slotA}の恥ずかしい過去", slots: { slotA: { category: "person", pos: "noun" } } },
+{ text: "{slotA}の恥ずかしい過去とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-{ text: "{slotA}の誰も知らない裏設定", slots: { slotA: { category: "person", pos: "noun" } } },
+{ text: "{slotA}の誰も知らない裏設定とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-{ text: "{slotA}が密かにやっていること", slots: { slotA: { category: "person", pos: "noun" } } },
+{ text: "{slotA}が密かにやっていることとは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-{ text: "{slotA}が絶対にやってはいけないこと", slots: { slotA: { category: "person", pos: "noun" } } },
+{ text: "{slotA}が絶対にやってはいけないこととは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-{ text: "{slotA}の黒い噂", slots: { slotA: { category: "person", pos: "noun" } } },
+{ text: "{slotA}の黒い噂とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-{ text: "{slotA}のダメなところ", slots: { slotA: { category: "person", pos: "noun" } } },
+{ text: "{slotA}のダメなところとは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-{ text: "{slotA}の変な癖", slots: { slotA: { category: "person", pos: "noun" } } },
+{ text: "{slotA}の変な癖とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-{ text: "{slotA}の変なルール", slots: { slotA: { category: "organization", pos: "noun" } } },
+{ text: "{slotA}の変なルールとは", slots: { slotA: { category: "organization", pos: "noun" } } },
 
-{ text: "{slotA}のありえない校則", slots: { slotA: { category: "place", pos: "noun" } } },
+{ text: "{slotA}のありえない校則とは", slots: { slotA: { category: "place", pos: "noun" } } },
 
-{ text: "{slotA}のありえないサービス", slots: { slotA: { category: "organization", pos: "noun" } } },
+{ text: "{slotA}のありえないサービスとは", slots: { slotA: { category: "organization", pos: "noun" } } },
 
-{ text: "{slotA}の意味不明なアップデート", slots: { slotA: { category: "technology", pos: "noun" } } },
+{ text: "{slotA}の意味不明なアップデートとは", slots: { slotA: { category: "technology", pos: "noun" } } },
 
-{ text: "{slotA}がアップデートした結果", slots: { slotA: { category: "technology", pos: "noun" } } },
+{ text: "{slotA}がアップデートした結果とは", slots: { slotA: { category: "technology", pos: "noun" } } },
 
-{ text: "{slotA}の新しいバグ", slots: { slotA: { category: "technology", pos: "noun" } } },
+{ text: "{slotA}の新しいバグとは", slots: { slotA: { category: "technology", pos: "noun" } } },
 
-{ text: "{slotA}が暴走して起きた事件", slots: { slotA: { category: "technology", pos: "noun" } } },
+{ text: "{slotA}が暴走して起きた事件とは", slots: { slotA: { category: "technology", pos: "noun" } } },
 
-{ text: "{slotA}のありえない進化", slots: { slotA: { category: "animal", pos: "noun" } } },
+{ text: "{slotA}のありえない進化とは", slots: { slotA: { category: "animal", pos: "noun" } } },
 
-{ text: "{slotA}が突然{slotB}した", slots: { slotA: { category: "animal", pos: "noun" }, slotB: { category: "abilityAction", pos: "verb" } } },
+{ text: "{slotA}が突然{slotB}能力を手に入れたとは", slots: { slotA: { category: "animal", pos: "noun" }, slotB: { category: "abilityAction", pos: "verb" } } },
 
-{ text: "{slotA}が人間社会に来た結果", slots: { slotA: { category: "animal", pos: "noun" } } },
+{ text: "{slotA}が人間社会に来た結果とは", slots: { slotA: { category: "animal", pos: "noun" } } },
 
-{ text: "{slotA}が学校に入学した理由", slots: { slotA: { category: "animal", pos: "noun" } } },
+{ text: "{slotA}が学校に入学した理由とは", slots: { slotA: { category: "animal", pos: "noun" } } },
 
-{ text: "{slotA}が会社に就職した理由", slots: { slotA: { category: "animal", pos: "noun" } } },
+{ text: "{slotA}が会社に就職した理由とは", slots: { slotA: { category: "animal", pos: "noun" } } },
 
-{ text: "{slotA}が{slotB}を始めた", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "abilityAction", pos: "verb" } } },
+{ text: "{slotA}が{slotB}能力の訓練を始めたとは", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "abilityAction", pos: "verb" } } },
 
-{ text: "{slotA}が突然{slotB}をやめた理由", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "abilityAction", pos: "verb" } } },
+{ text: "{slotA}が突然{slotB}能力を失った理由とは", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "abilityAction", pos: "verb" } } },
 
-{ text: "{slotA}が{slotB}でバズった", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "event", pos: "noun" } } },
+{ text: "{slotA}が{slotB}でバズった理由とは", slots: { slotA: { category: "person", pos: "noun" }, slotB: { category: "event", pos: "noun" } } },
 
-{ text: "{slotA}がトレンド入りした理由", slots: { slotA: { category: "person", pos: "noun" } } },
+{ text: "{slotA}がトレンド入りした理由とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-{ text: "{slotA}がニュースになった理由", slots: { slotA: { category: "person", pos: "noun" } } },
+{ text: "{slotA}がニュースになった理由とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-{ text: "{slotA}の謎の習慣", slots: { slotA: { category: "person", pos: "noun" } } },
+{ text: "{slotA}の謎の習慣とは", slots: { slotA: { category: "person", pos: "noun" } } },
 
-{ text: "{slotA}の変なこだわり", slots: { slotA: { category: "person", pos: "noun" } } },
+{ text: "{slotA}の変なこだわりとは", slots: { slotA: { category: "person", pos: "noun" } } },
 ];
   
 
@@ -805,7 +805,7 @@ function pickOne<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function pickWord(category: Category, pos?: "noun" | "verb"): string {
+function pickWord(category: Category, pos?: "noun" | "verb" | "adjective"): string {
   const pool = wordPools[category];
   if (!pool || pool.length === 0) return "";
   // posが指定されている場合、posに一致する単語のみから選ぶ

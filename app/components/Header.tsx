@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Header() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
 
   const [q, setQ] = useState(searchParams.get("q") || "");
 
@@ -20,22 +19,23 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+    <header className="fixed top-0 left-0 w-full bg-[#000080] border-b-2 border-black z-50">
       <div className="max-w-2xl mx-auto flex items-center justify-between p-2">
-        <a href="/" className="font-bold text-lg">
-          お題アプリ
-        </a>
+        <div className="site-title-link text-lg font-bold drop-shadow-[1px_1px_0_#000]">
+          大喜利研究所
+        </div>
+
         <form onSubmit={submit} className="flex items-center">
           <input
             type="text"
             placeholder="検索..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            className="border rounded-md p-1 mr-2"
+            className="border border-black bg-white text-black p-1 mr-2"
           />
           <button
             type="submit"
-            className="bg-black text-white px-2 py-1 rounded-md"
+            className="bg-[#dcdcdc] text-black px-2 py-1 border border-black"
           >
             検索
           </button>

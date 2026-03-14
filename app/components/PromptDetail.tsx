@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 
 type Answer = { id: string; promptId: string; text: string; createdAt: string; likeCount?: number };
+const PAGE_SIZE = 50;
 
 export default function PromptDetail({ promptId }: { promptId: string }) {
   const [answers, setAnswers] = useState<Answer[]>([]);
@@ -11,6 +12,7 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [sortBy, setSortBy] = useState<"newest" | "likes">("likes");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     (async () => {
@@ -18,14 +20,52 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
       try {
         const res = await fetch(`/api/prompts/${promptId}/answers`);
         const data: Answer[] = await res.json();
-        setAnswers(data);
+        // ページロード時のみ並び替え
+        setAnswers(
+          sortBy === "likes"
+            ? [...data].sort((a, b) => (b.likeCount ?? 0) - (a.likeCount ?? 0))
+            : [...data].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        );
       } catch (e) {
         console.error(e);
       } finally {
         setLoading(false);
       }
     })();
-  }, [promptId]);
+  }, [promptId, sortBy]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [promptId, sortBy]);
+
+  const totalPages = Math.max(1, Math.ceil(answers.length / PAGE_SIZE));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const startIndex = (safeCurrentPage - 1) * PAGE_SIZE;
+  const pagedAnswers = answers.slice(startIndex, startIndex + PAGE_SIZE);
+
+  const paginationLinks = (
+    <div className="text-sm pt-1 text-[#0000cc]">
+      {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((page, index) => (
+        <span key={page}>
+          {index > 0 && <span className="mx-1 text-black">/</span>}
+          {safeCurrentPage === page ? (
+            <span className="text-black font-bold">{page}</span>
+          ) : (
+            <a
+              href={`#answer-page-${page}`}
+              onClick={(e) => {
+                e.preventDefault();
+                setCurrentPage(page);
+              }}
+              className="text-[#0000cc] underline cursor-pointer"
+            >
+              {page}
+            </a>
+          )}
+        </span>
+      ))}
+    </div>
+  );
 
   const submit = async () => {
     if (!text.trim()) return;
@@ -52,10 +92,10 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
   };
 
   return (
-    <div className="border-t pt-3">
-      <div className="mb-2 text-sm text-gray-600">回答する</div>
+    <div className="border-t border-black pt-3 mt-3">
+      <div className="mb-2 text-sm text-gray-700">回答する</div>
       <textarea
-        className="w-full border rounded-md p-2 mb-2"
+        className="w-full border border-black p-2 mb-2 bg-white"
         rows={2}
         placeholder="ここに回答を書いてください..."
         value={text}
@@ -65,7 +105,7 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
         <button
           onClick={submit}
           disabled={submitting}
-          className="bg-black text-white px-3 py-1 rounded-md disabled:opacity-60"
+          className="bg-[#000080] text-white px-3 py-1 border border-black disabled:opacity-60"
         >
           {submitting ? "送信中..." : "回答を投稿"}
         </button>
@@ -73,74 +113,74 @@ export default function PromptDetail({ promptId }: { promptId: string }) {
 
       <div className="mt-4">
         <div className="flex justify-between items-center mb-2">
-          <div className="text-sm text-gray-600">回答一覧</div>
+          <div className="text-sm text-gray-700">回答一覧</div>
           <div className="flex gap-2">
             <button
               onClick={() => setSortBy("newest")}
-              className={`px-2 py-1 rounded-md text-xs ${sortBy === "newest" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
+              className={`px-2 py-1 border text-xs ${sortBy === "newest" ? "bg-[#000080] text-white border-black" : "bg-[#dcdcdc] text-black border-[#808080]"}`}
             >
               新着順
             </button>
             <button
               onClick={() => setSortBy("likes")}
-              className={`px-2 py-1 rounded-md text-xs ${sortBy === "likes" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
+              className={`px-2 py-1 border text-xs ${sortBy === "likes" ? "bg-[#000080] text-white border-black" : "bg-[#dcdcdc] text-black border-[#808080]"}`}
             >
               いいね順
             </button>
           </div>
         </div>
         {loading ? (
-          <div className="text-gray-500">読み込み中...</div>
+          <div className="text-gray-700">読み込み中...</div>
         ) : answers.length === 0 ? (
-          <div className="text-gray-500">まだ回答がありません。</div>
+          <div className="text-gray-700">まだ回答がありません。</div>
         ) : (
           <div className="space-y-2">
-            {answers
-              .sort((a, b) => {
-                if (sortBy === "likes") {
-                  return (b.likeCount ?? 0) - (a.likeCount ?? 0);
-                } else {
-                  return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-                }
-              })
-              .map((a) => (
-                <div key={a.id} className="p-2 bg-gray-50 rounded-md">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="text-sm text-gray-500">{new Date(a.createdAt).toLocaleString()}</div>
-                      <div className="mt-1">{a.text}</div>
-                    </div>
-                    <div className="ml-3 text-right">
-                      <button
-                        onClick={async () => {
-                          console.log("Liking answer:", a.id);
-                          try {
-                            const res = await fetch(`/api/answers/${a.id}/like`, {
-                              method: "POST",
-                            });
-                            console.log("Answer like response:", res.status);
-                            if (res.ok) {
-                              const updated = await res.json();
-                              console.log("Updated answer:", updated);
-                              setAnswers((s) => s.map((x) => (x.id === updated.id ? updated : x)));
-                            } else {
-                              const errorText = await res.text();
-                              console.error("Error response:", res.status, errorText);
-                              alert(errorText);
-                            }
-                          } catch (e) {
-                            console.error(e);
+            <div className="text-sm text-gray-700">
+              全{answers.length}件（{safeCurrentPage}/{totalPages}ページ）
+            </div>
+
+            {paginationLinks}
+
+            {pagedAnswers.map((a) => (
+              <div key={a.id} className="p-2 bg-[#fffff0] border border-[#808080]">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="text-sm text-gray-700">{new Date(a.createdAt).toLocaleString()}</div>
+                    <div className="mt-1">{a.text}</div>
+                  </div>
+                  <div className="ml-3 text-right">
+                    <button
+                      onClick={async () => {
+                        console.log("Liking answer:", a.id);
+                        try {
+                          const res = await fetch(`/api/answers/${a.id}/like`, {
+                            method: "POST",
+                          });
+                          console.log("Answer like response:", res.status);
+                          if (res.ok) {
+                            const updated = await res.json();
+                            console.log("Updated answer:", updated);
+                            setAnswers((s) => s.map((x) => (x.id === updated.id ? updated : x)));
+                          } else {
+                            const errorText = await res.text();
+                            console.error("Error response:", res.status, errorText);
+                            alert(errorText);
                           }
-                        }}
-                        disabled={false}
-                        className="mt-2 bg-gray-500 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-600 disabled:opacity-60 font-medium"
-                      >
-                        ♡ {a.likeCount ?? 0}
-                      </button>
-                    </div>
+                        } catch (e) {
+                          console.error(e);
+                        }
+                      }}
+                      disabled={false}
+                      className="mt-2 bg-[#dcdcdc] text-black px-4 py-2 border border-black text-sm disabled:opacity-60 font-medium"
+                    >
+                      ♡ {a.likeCount ?? 0}
+                    </button>
                   </div>
                 </div>
-              ))}
+              </div>
+            ))}
+
+            {paginationLinks}
           </div>
         )}
       </div>

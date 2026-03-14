@@ -1,4 +1,4 @@
-import { getPrompts, updatePrompt } from "@/app/lib/data";
+import { incrementTopicLike } from "@/services/topics";
 
 export async function POST(
   request: Request,
@@ -8,22 +8,22 @@ export async function POST(
   const { id } = params;
 
   try {
-    const prompts = getPrompts();
-    const prompt = prompts.find((p) => p.id === id);
+    const topic = await incrementTopicLike(id);
 
-    if (!prompt) {
+    if (!topic) {
       return Response.json({ error: "Prompt not found" }, { status: 404 });
     }
 
-    // increment like count
-    prompt.likeCount = (prompt.likeCount || 0) + 1;
-    updatePrompt(prompt);
-
-    return Response.json(prompt);
+    return Response.json({
+      id: topic.id,
+      text: topic.text,
+      createdAt: topic.createdAt,
+      likeCount: topic.likeCount ?? 0,
+    });
   } catch (e) {
-    console.error(e);
+    console.error("supabase like failed", e);
     return Response.json(
-      { error: "Internal server error" },
+      { error: e instanceof Error ? e.message : "Internal server error" },
       { status: 500 }
     );
   }

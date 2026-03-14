@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import PromptForm from "./components/PromptForm";
+import TopicForm from "./components/TopicForm";
 import PromptList from "./components/PromptList";
 
 type Prompt = { id: string; text: string; createdAt: string; likeCount?: number };
@@ -24,9 +24,16 @@ export default function Home() {
       try {
         const res = await fetch('/api/prompts');
         const data = await res.json();
-        setPrompts(data);
+        if (!res.ok) {
+          console.error("failed to fetch prompts", data);
+          setPrompts([]);
+          return;
+        }
+
+        setPrompts(Array.isArray(data) ? data : []);
       } catch (e) {
         console.error(e);
+        setPrompts([]);
       } finally {
         setLoading(false);
       }
@@ -37,7 +44,7 @@ export default function Home() {
     setPrompts((s) => [p, ...s]);
   };
 
-  const filtered = prompts.filter((p) => {
+  const filtered = (Array.isArray(prompts) ? prompts : []).filter((p) => {
     const q = searchQuery.toLowerCase();
     return p.text.toLowerCase().includes(q);
   });
@@ -51,11 +58,11 @@ export default function Home() {
   });
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-100">
-      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-2xl">
-        <h1 className="text-2xl font-bold mb-4 text-center">📝 お題投稿アプリ</h1>
+    <main className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#c0c0c0]">
+      <div className="bg-[#efefef] p-5 border-2 border-[#808080] w-full max-w-2xl shadow-[2px_2px_0_#808080]">
+        <h1 className="text-xl font-bold mb-4 text-center border-b border-black pb-2 text-[#222244]"> 大喜利研究所</h1>
 
-        <PromptForm onAdd={handleAdd} />
+        <TopicForm onAdd={handleAdd} />
 
         <section>
           <div className="flex justify-between items-center mb-3">
@@ -63,20 +70,20 @@ export default function Home() {
             <div className="flex gap-2">
               <button
                 onClick={() => setSortBy("newest")}
-                className={`px-3 py-1 rounded-md text-sm ${sortBy === "newest" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
+                className={`px-3 py-1 border text-sm ${sortBy === "newest" ? "bg-[#000080] text-white border-black" : "bg-[#dcdcdc] text-black border-[#808080]"}`}
               >
                 新着順
               </button>
               <button
                 onClick={() => setSortBy("likes")}
-                className={`px-3 py-1 rounded-md text-sm ${sortBy === "likes" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
+                className={`px-3 py-1 border text-sm ${sortBy === "likes" ? "bg-[#000080] text-white border-black" : "bg-[#dcdcdc] text-black border-[#808080]"}`}
               >
                 いいね順
               </button>
             </div>
           </div>
           {loading ? (
-            <div className="text-gray-500">読み込み中...</div>
+            <div className="text-[#333355]">読み込み中...</div>
           ) : (
             <PromptList prompts={sorted} />
           )}

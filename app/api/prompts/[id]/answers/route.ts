@@ -1,10 +1,18 @@
 import { NextResponse } from "next/server";
-import { getAnswers, addAnswer } from "../../../../lib/data";
+import { createAnswer, getAnswersByTopicId } from "@/services/answers";
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const list = getAnswers().filter((a) => a.promptId === id);
-  return NextResponse.json(list);
+  try {
+    const list = await getAnswersByTopicId(id);
+    return NextResponse.json(list);
+  } catch (error) {
+    console.error("failed to fetch answers", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "failed to fetch answers" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -16,15 +24,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       return NextResponse.json({ error: "text is required" }, { status: 400 });
     }
 
-    const newAnswer = {
-      id: String(Date.now()),
-      promptId: id,
-      text: text.trim(),
-      createdAt: new Date().toISOString(),
-      likeCount: 0,
-    };
-
-    addAnswer(newAnswer as any);
+    const newAnswer = await createAnswer(id, text.trim());
 
     return NextResponse.json(newAnswer, { status: 201 });
   } catch (e) {

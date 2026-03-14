@@ -1,26 +1,165 @@
 @import "tailwindcss";
 
+/* =========================
+   Color Variables
+========================= */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #c0c0c0;
+  --foreground: #222244;
+  --heading: #000080;
+  --subheading: #444466;
+  --link: #0000ee;
+  --visited: #551a8b;
+
+  --button-bg: #dcdcdc;
+  --button-fg: #222244;
+
+  --button-active-bg: #000080;
+  --button-active-fg: #ffffff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* Dark mode */
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1b1b1b;
+    --foreground: #f0f0ff;
+    --heading: #99b3ff;
+    --subheading: #ccccdd;
+    --link: #7aa2ff;
+    --visited: #c39bff;
+
+    --button-bg: #444444;
+    --button-fg: #f0f0ff;
+
+    --button-active-bg: #3556b8;
+    --button-active-fg: #ffffff;
   }
 }
+
+/* =========================
+   Base Layout
+========================= */
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+  font-family:
+    "MS PGothic",
+    "MS Gothic",
+    "Osaka",
+    "Hiragino Kaku Gothic Pro",
+    Arial,
+    sans-serif;
+
+  line-height: 1.6;
+
+  /* Retro grid background */
+  background-image:
+    linear-gradient(0deg, rgba(255,255,255,0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.18) 1px, transparent 1px);
+
+  background-size: 10px 10px;
+}
+
+/* =========================
+   Retro Container
+========================= */
+
+.container {
+  width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+
+  background: #ffffff;
+  border: 2px solid #808080;
+}
+
+/* =========================
+   Headings
+========================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--heading);
+  font-weight: bold;
+}
+
+.section-title,
+.main-title {
+  color: var(--heading);
+}
+
+.sub-title {
+  color: var(--subheading);
+}
+
+/* =========================
+   Links
+========================= */
+
+a {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+a:visited {
+  color: var(--visited);
+}
+
+.site-title-link,
+.site-title-link:link,
+.site-title-link:visited,
+.site-title-link:hover,
+.site-title-link:focus,
+.site-title-link:active {
+  color: #ffff66 !important;
+  text-decoration: none !important;
+}
+
+/* =========================
+   Forms
+========================= */
+
+input,
+textarea {
+  border-radius: 0;
+  border: 1px solid #888;
+  padding: 6px;
+  background: #ffffff;
+  color: #000;
+}
+
+/* =========================
+   Retro Buttons
+========================= */
+
+button {
+  background: var(--button-bg);
+  color: var(--button-fg);
+
+  border-radius: 0;
+  border: 2px outset #ffffff;
+
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(0.95);
+}
+
+button:active,
+button.active,
+button.selected {
+  background: var(--button-active-bg);
+  color: var(--button-active-fg);
+
+  border: 2px inset #808080;
 }
